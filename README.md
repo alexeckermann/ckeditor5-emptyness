@@ -19,7 +19,7 @@ The origin use case was for the application to observe the attribute and know wh
 
 ```
 import BalloonEditorBase from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor';
-import EmptynessPlugin from '@alexeckermann/ckeditor5-emptyness/src/emptyness';
+import EmptynessPlugin from 'ckeditor5-emptyness/src/emptyness';
 // .. all your other imports here
 
 export default class MyEditor extends BalloonEditorBase { }
