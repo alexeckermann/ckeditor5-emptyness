@@ -1,0 +1,32 @@
+{
+  "name": "ckeditor5-emptyness",
+  "version": "0.1.0",
+  "description": "How empty is your CKEditor instance? Adds isEmpty attribute to editors.",
+  "keywords": [
+    "ckeditor5",
+    "ckeditor5-plugin"
+  ],
+  "dependencies": {
+    "@ckeditor/ckeditor5-core": "^1.0.0-alpha.2"
+  },
+  "devDependencies": { },
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=3.0.0"
+  },
+  "contributors": [
+    "Alex Eckermann <alex@alexeckermann.com> (https://twitter.com/alexeckermann)"
+  ],
+  "license": "(GPL-2.0 OR LGPL-2.1 OR MPL-1.1)",
+  "bugs": "https://github.com/alexeckermann/ckeditor5-emptyness/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexeckermann/ckeditor5-emptyness.git"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+
+  }
+}
