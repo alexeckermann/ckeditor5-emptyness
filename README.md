@@ -57,7 +57,7 @@ MyEditor.create( element ).then( editor => {
 	editor.on( 'change:isEmpty', () => {
 
 		if ( editor.isEmpty ) {
-			element.addAttribute( 'data-empty', true );
+			element.setAttribute( 'data-empty', true );
 		} else {
 			element.removeAttribute( 'data-empty' );
 		}
