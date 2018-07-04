@@ -8,26 +8,18 @@ export default class Emptyness extends Plugin {
 
 	init() {
 		const editor = this.editor;
-		const model = editor.data.model;
+		const doc = editor.model.document;
 
-		const view = editor.ui.view;
-		const bind = view.bindTemplate;
+		editor.set( 'isEmpty', !documentHasContent(doc) );
 
-		editor.set( 'isEmpty', !modelHasContent(model) );
-
-		model.on( 'applyOperation', () => {
-			editor.set( 'isEmpty', !modelHasContent(model) );
-			return true;
+		this.listenTo( doc, 'change:data', () => {
+			editor.set( 'isEmpty', !documentHasContent(doc) );
 		} );
 
 	}
 
 };
 
-function dataControllerRootHasContent(data) {
-	return data.hasContent(data.model.getRoot());
-};
-
-function modelHasContent(model) {
-	return model.hasContent(model.document.getRoot());
+function documentHasContent(doc) {
+	return doc.model.hasContent(doc.getRoot());
 };

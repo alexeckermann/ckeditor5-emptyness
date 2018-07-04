@@ -17,7 +17,7 @@ The origin use case was for the application to observe the attribute and know wh
 
 ### General Example
 
-```
+```js
 import BalloonEditorBase from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor';
 import EmptynessPlugin from 'ckeditor5-emptyness/src/emptyness';
 // .. all your other imports here
@@ -35,13 +35,13 @@ MyEditor.build = {
 };
 ```
 
-```
+```js
 const element = document.querySelector('#editor');
 
 MyEditor.create( element ).then( editor => {
 
 	editor.on( 'change:isEmpty', () => {
-		console.log( 'is you empty or is you aint?', editor.isEmpty ? 'is empty' : 'aint empty' );
+		console.log( 'is the editor empty?', editor.isEmpty ? 'yes, it is' : 'no, it is not' );
 	} );
 
 } );
@@ -49,7 +49,7 @@ MyEditor.create( element ).then( editor => {
 
 ### Placeholder Example
 
-```
+```js
 const element = document.querySelector('#editor');
 
 MyEditor.create( element ).then( editor => {
@@ -67,7 +67,7 @@ MyEditor.create( element ).then( editor => {
 } );
 ```
 
-```
+```css
 #editor[data-empty]::before {
 	content: 'Untitled';
 	position: absolute;
@@ -80,6 +80,12 @@ MyEditor.create( element ).then( editor => {
 **_Why can't we use CSS classes to use as a target for CSS?_**
 
 The HTML element used for CKEditor instances is a managed view. Throughout use of the editor, the elements class list will change and can remove classes added outside of CKEditors management. In initial testing of this plugin we found no obvious way to extend the CKEditor's view `Template` for a editor view to enable CSS class based functionality. This could be resolved in future given advice from CKEditor maintainers.
+
+## Changelog
+
+### v0.2.0 - 4 July 2018
+
+- Updating event listener to use `change:data` event on the editors document. Plugin now depends on CKEditor 5 core and engine `^10.1.0`.
 
 ## Testing
 
