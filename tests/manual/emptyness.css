@@ -1,7 +1,0 @@
-#editor[data-empty]::before {
-	content: 'The editor is empty';
-	position: absolute;
-	display: block;
-	color: #aaa;
-	font-weight: bold;
-}
