@@ -3,23 +3,21 @@ Emptyness — _How empty is **your** CKEditor 5 instance?_
 
 Why does something so simple exist? With great simplicity comes great possibilities.
 
-...
-
-Well maybe _one_ possibility. The purpose of this plugin was to have an observable way to know if an editor instance has content or not.
+Well... maybe _one_ possibility. The purpose of this plugin was to have an observable way to know if an editor instance has content or not.
 
 Specifically, how can an application know when an editor is empty so it can show a placeholder — like an input element.
 
 ## Documentation
 
-Simply build your editor with this plugin and you will get access to a `isEmpty` observable attribute (care of `ObservableMixin`) on your editor instance.
+Simply build your editor with this plugin and you will get access to a `isEmpty` observable attribute (care of `Observable`) on your editor instance. Additionaly, the plugin will add a `ck-editor__is-empty` class name on the editor element when is is empty.
 
-The origin use case was for the application to observe the attribute and know when the editor enters or exits an empty state. From there the application applies an attribute to the editors HTML element so that a CSS based placeholder can be applied — using CSS's `::before` rules to inject 'phantom' content without disturbing CKEditor's actual content, and no messy invisible HTML elements.
+The origin use case was for the application to observe the attribute and know when the editor enters or exits an empty state. From there the application applies an attribute to the editors HTML element so that a CSS based placeholder can be applied — using CSS's `::before` rules to inject _phantom_ content without disturbing CKEditor's actual content.
 
-### General Example
+### Placeholder Example
 
-```
+```js
 import BalloonEditorBase from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor';
-import EmptynessPlugin from 'ckeditor5-emptyness/src/emptyness';
+import Emptyness from 'ckeditor5-emptyness/src/emptyness';
 // .. all your other imports here
 
 export default class MyEditor extends BalloonEditorBase { }
@@ -29,61 +27,62 @@ MyEditor.build = {
 
 	plugins: [
 		// ... all your other plugins here
-		EmptynessPlugin
+		Emptyness
 	]
 
 };
 ```
 
-```
-const element = document.querySelector('#editor');
-
-MyEditor.create( element ).then( editor => {
-
-	editor.on( 'change:isEmpty', () => {
-		console.log( 'is you empty or is you aint?', editor.isEmpty ? 'is empty' : 'aint empty' );
-	} );
-
-} );
-```
-
-### Placeholder Example
-
-```
-const element = document.querySelector('#editor');
-
-MyEditor.create( element ).then( editor => {
-
-	editor.on( 'change:isEmpty', () => {
-
-		if ( editor.isEmpty ) {
-			element.setAttribute( 'data-empty', true );
-		} else {
-			element.removeAttribute( 'data-empty' );
-		}
-
-	} );
-
-} );
-```
-
-```
-#editor[data-empty]::before {
-	content: 'Untitled';
+```css
+.ck-editor__is-empty .ck-content.ck-editor__editable::before,
+.ck-editor__is-empty.ck-content.ck-editor__editable::before {
+	content: 'The editor is empty';
 	position: absolute;
 	display: block;
+	
+	margin: var(--ck-spacing-large) 0;
+	
 	color: #aaa;
-	font-weight: bold;
 }
 ```
 
-**_Why can't we use CSS classes to use as a target for CSS?_**
+**_Whats with the weird CSS scope?_**
 
-The HTML element used for CKEditor instances is a managed view. Throughout use of the editor, the elements class list will change and can remove classes added outside of CKEditors management. In initial testing of this plugin we found no obvious way to extend the CKEditor's view `Template` for a editor view to enable CSS class based functionality. This could be resolved in future given advice from CKEditor maintainers.
+Depending on the editor, the element used for content may not be the same as the one used when initialising the editor. Editors with toolbars will generate a new element structure. To cover all bases the scope is what it is -- where the `ck-editor__is-empty` class name is on the same element as the `ck-content` element or on a parent element.
+
+## Changelog
+
+### v0.2.0 - 4 July 2018
+
+- Updating event listener to use `change:data` event on the editors document.
+- No more `data-empty`! The plugin now extends the editors template with a bound CSS class name.
+- Plugin now depends on CKEditor 5 core and engine `^10.1.0`.
+- We now have tests!
+- Updated README.
+
+### v0.1.0
+
+- Initial _rough_ version.
+- No tests.
 
 ## Testing
 
-TODO _Sorry..._
+### Required setup
+
+1. Setup the CKEditor [development environment](https://docs.ckeditor.com/ckeditor5/latest/framework/guides/contributing/development-environment.html).
+2. Add a dependency to the CKEditor project development environment:
+	1. `cd ckeditor` enter into the CKEditor project as created in step 1
+	2. Open and edit `mgit.json`
+	3. Add `"ckeditor5-emptyness": "alexeckermann/ckeditor5-emptyness` to the dependencies list
+3. `mgit update`
+4. `lerna bootstrap --scope=ckeditor5-emptyness`
+
+### Running tests
+
+1. `cd ckeditor` enter into the CKEditor project
+2. `npm run test -- --files=emptyness`
+
+It is important to note that tests are run from within the CKEditor project and not solely on this project.
 
 ## License
 

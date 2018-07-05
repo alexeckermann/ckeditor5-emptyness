@@ -1,4 +1,5 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
+import Template from '@ckeditor/ckeditor5-ui/src/template';
 
 export default class Emptyness extends Plugin {
 
@@ -8,26 +9,29 @@ export default class Emptyness extends Plugin {
 
 	init() {
 		const editor = this.editor;
-		const model = editor.data.model;
-
+		const doc = editor.model.document;
 		const view = editor.ui.view;
-		const bind = view.bindTemplate;
 
-		editor.set( 'isEmpty', !modelHasContent(model) );
+		editor.set( 'isEmpty', !documentHasContent(doc) );
 
-		model.on( 'applyOperation', () => {
-			editor.set( 'isEmpty', !modelHasContent(model) );
-			return true;
+		this.listenTo( doc, 'change:data', () => {
+			editor.set( 'isEmpty', !documentHasContent(doc) );
+		} );
+		
+		const bind = Template.bind( editor, editor );
+		
+		view.extendTemplate( { 
+			attributes: {
+				class: [
+					bind.if( 'isEmpty', 'ck-editor__is-empty' )
+				]
+			}
 		} );
 
 	}
 
 };
 
-function dataControllerRootHasContent(data) {
-	return data.hasContent(data.model.getRoot());
-};
-
-function modelHasContent(model) {
-	return model.hasContent(model.document.getRoot());
+function documentHasContent(doc) {
+	return doc.model.hasContent(doc.getRoot());
 };

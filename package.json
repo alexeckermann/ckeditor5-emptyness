@@ -1,15 +1,25 @@
 {
   "name": "ckeditor5-emptyness",
-  "version": "0.1.0",
-  "description": "How empty is your CKEditor instance? Adds isEmpty attribute to editors.",
+  "version": "0.2.0",
+  "description": "How empty is your CKEditor instance? Adds observable isEmpty property to editors.",
   "keywords": [
     "ckeditor5",
     "ckeditor5-plugin"
   ],
   "dependencies": {
-    "@ckeditor/ckeditor5-core": "^10.0.0"
+    "@ckeditor/ckeditor5-core": "^10.1.0",
+    "@ckeditor/ckeditor5-engine": "^10.1.0"
   },
-  "devDependencies": { },
+  "devDependencies": {
+    "@ckeditor/ckeditor5-editor-classic": "^10.0.1",
+    "@ckeditor/ckeditor5-essentials": "^10.1.0",
+    "@ckeditor/ckeditor5-paragraph": "^10.1.0",
+    "@ckeditor/ckeditor5-utils": "^10.1.0",
+    "eslint": "^4.15.0",
+    "eslint-config-ckeditor5": "^1.0.7",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.0"
+  },
   "engines": {
     "node": ">=6.0.0",
     "npm": ">=3.0.0"
@@ -26,7 +36,5 @@
   "files": [
     "src"
   ],
-  "scripts": {
-
-  }
+  "scripts": { }
 }
