@@ -12,7 +12,7 @@ export default class Emptyness extends Plugin {
 		const editor = this.editor;
 		const doc = editor.model.document;
 		const view = editor.ui.view.editable;
-		
+
 		if ( !view ) {
 			log.error( 'emptyness-view-not-found: expected editable view not found for this editor (expects editor.ui.view.editable to be defined)' );
 			return;
@@ -23,14 +23,14 @@ export default class Emptyness extends Plugin {
 		this.listenTo( doc, 'change:data', () => {
 			editor.set( 'isEmpty', !documentHasContent(doc) );
 		} );
-		
+
 		if ( view.isRendered === true ) {
 			log.warn( 'emptyness-view-is-rendered: can not extend the editor UI view after its been rendered, class name will be unavailable (see: template-extend-render)' );
 			return;
 		}
-		
+
 		const bind = Template.bind( editor, editor );
-		
+
 		view.extendTemplate( { 
 			attributes: {
 				class: [
@@ -38,9 +38,7 @@ export default class Emptyness extends Plugin {
 				]
 			}
 		} );
-
 	}
-
 };
 
 function documentHasContent(doc) {
