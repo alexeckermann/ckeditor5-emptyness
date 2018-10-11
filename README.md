@@ -49,9 +49,10 @@ The empty class will be applied to the editable view for the editor, this may be
 
 ## Changelog
 
-### v0.2.1 - 6 July 2018
+### v0.2.1 - 11 October 2018
 
 - Fix [alexeckermann/ckeditor5-emptyness#5](https://github.com/alexeckermann/ckeditor5-emptyness/issues/5): The plugin tested against a editor which performs differently to the non-test editor. This lead to an incorrect asumption about what view to use for the empty CSS class. As a result the plugin will now detect if it is integrating with an editor it supports, logs error and warning messages if needed. This also simplifies the CSS targeting to just the content editable element.
+- Updated dependencies to target CK5 v11.1 compatible dependencies.
 
 ### v0.2.0 - 4 July 2018
 
