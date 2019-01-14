@@ -7,30 +7,32 @@ import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictest
 import IncompatibleTestEditor from './_utils/incompatibletesteditor';
 
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import List from '@ckeditor/ckeditor5-list/src/list';
 
 import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils';
-import { setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
+
+import { setData as setModelData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
+
 import log from '@ckeditor/ckeditor5-utils/src/log';
 
 testUtils.createSinonSandbox();
 
 describe( 'Emptyness', () => {
 	let editor, editorElement;
+	let model;
 
 	const insertContent = () => {
 
-		editor.model.change( writer => {
-			writer.setSelection( ModelRange.createIn( editor.model.document.getRoot().getChild( 0 ) ) );
-			editor.model.insertContent( new ModelText( 'test' ), editor.model.document.selection );
-		} );
+		setModelData( model, '<paragraph>test{}</paragraph>' );
 
 	};
 
 	const removeAllContent = () => {
 
-		editor.model.change( writer => {
-			writer.setSelection( ModelRange.createIn( editor.model.document.getRoot().getChild( 0 ) ) );
-			editor.model.deleteContent( editor.model.document.selection );
+		const modelRoot = model.document.getRoot();
+
+		model.change( writer => {
+			writer.remove( writer.createRangeIn( modelRoot ) );
 		} );
 
 	};
@@ -43,17 +45,19 @@ describe( 'Emptyness', () => {
 
 			return ClassicTestEditor
 				.create( editorElement, {
-					plugins: [ Emptyness, Paragraph ]
+					plugins: [ Emptyness, Paragraph, List ]
 				} )
 				.then( newEditor => {
 					editor = newEditor;
+					model = editor.model;
 				} );
 		} );
 
 		afterEach( () => {
 			editorElement.remove();
-
-			return editor.destroy();
+			editor.destroy();
+			editor = null;
+			model = null;
 		} );
 
 		it( 'should be loaded', () => {
@@ -69,17 +73,19 @@ describe( 'Emptyness', () => {
 		} );
 
 		describe( 'isEmpty lifecycle', () => {
-		
+			let setSpy;
+
+			beforeEach( () => {
+				setSpy = testUtils.sinon.spy( editor, 'set' );
+			});
+
 			it( 'should be false when content is inserted', () => {
-				const setSpy = testUtils.sinon.spy( editor, 'set' );
 				insertContent();
 				sinon.assert.calledWithExactly( setSpy, 'isEmpty', false );
 			} );
 
 			it( 'should be true when all content is emptied', () => {
-				setData( editor.model, '<paragraph>test{}</paragraph>' );
-
-				const setSpy = testUtils.sinon.spy( editor, 'set' );
+				insertContent();
 				removeAllContent();
 				sinon.assert.calledWithExactly( setSpy, 'isEmpty', true );
 			} );
@@ -97,13 +103,24 @@ describe( 'Emptyness', () => {
 			} );
 
 			it( 'should add the empty class when all content is emptied', () => {
-				setData( editor.model, '<paragraph>test{}</paragraph>' );
+				insertContent();
 
 				let element = editor.ui.view.editable.editableElement;
 
 				expect( element.classList.contains('ck-editor__is-empty') ).to.be.false;
 				removeAllContent();
 				expect( element.classList.contains('ck-editor__is-empty') ).to.be.true;
+			} );
+
+		} );
+
+		describe( 'visually present block with no content', () => {
+
+			it( 'should not be empty', () => {
+				
+				setModelData( model, '<listItem listType="bulleted" listIndent="0">[]</listItem>' );
+				expect( editor.isEmpty ).to.be.false;
+
 			} );
 
 		} );
@@ -126,12 +143,15 @@ describe( 'Emptyness', () => {
 				} )
 				.then( newEditor => {
 					editor = newEditor;
+					model = editor.model;
 				} );
 		} );
 
 		afterEach( () => {
 			editorElement.remove();
-			return editor.destroy();
+			editor.destroy();
+			editor = null;
+			model = null;
 		} );
 
 		it( 'should be loaded', () => {
@@ -169,12 +189,15 @@ describe( 'Emptyness', () => {
 				} )
 				.then( newEditor => {
 					editor = newEditor;
+					model = editor.model;
 				} );
 		} );
 
 		afterEach( () => {
 			editorElement.remove();
 			editor.destroy();
+			editor = null;
+			model = null;
 		} );
 
 		it( 'should be loaded', () => {

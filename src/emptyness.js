@@ -18,10 +18,10 @@ export default class Emptyness extends Plugin {
 			return;
 		}
 
-		editor.set( 'isEmpty', !documentHasContent(doc) );
+		editor.set( 'isEmpty', isDocumentVisuallyEmpty(doc) );
 
 		this.listenTo( doc, 'change:data', () => {
-			editor.set( 'isEmpty', !documentHasContent(doc) );
+			editor.set( 'isEmpty', isDocumentVisuallyEmpty(doc) );
 		} );
 
 		if ( view.isRendered === true ) {
@@ -41,6 +41,28 @@ export default class Emptyness extends Plugin {
 	}
 };
 
-function documentHasContent(doc) {
-	return doc.model.hasContent(doc.getRoot());
-};
+function isDocumentVisuallyEmpty( document ) {
+
+	const root = document.getRoot();
+
+	for ( const node of root.getChildren() ) {
+
+		if ( node.isEmpty === false ) {
+			return false;
+		}
+
+		if ( node.is( 'element' ) && isElementVisuallyPresent( node ) ) {
+			return false;
+		}
+
+	}
+
+	return true;
+
+}
+
+const elementNamesWithVisualPresence = [ 'listItem', 'blockQuote' ];
+
+function isElementVisuallyPresent( element ) {
+ return elementNamesWithVisualPresence.indexOf( element.name ) !== -1;
+}
